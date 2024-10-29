@@ -9,10 +9,11 @@ def talker():
     rate=rospy.Rate(10)
     x =0
     while not rospy.is_shutdown():
+    	x+=1
         hello_str='hai NIVI and Charun %s' % x
         rospy.loginfo(hello_str)
         pub.publish(hello_str)
-        x+=1
+        
         rate.sleep()
 if __name__=='__main__':
     try:
