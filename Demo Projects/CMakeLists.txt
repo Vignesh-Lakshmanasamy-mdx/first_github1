@@ -8,9 +8,10 @@ project(formative_assessment)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  geometry_msgs.msg
   rospy
   std_msgs
-  turtlesim
+  turtlesim.msg
 )
 
 ## System dependencies are found with CMake's conventions
@@ -105,7 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES formative_assessment
-#  CATKIN_DEPENDS rospy std_msgs turtlesim
+#  CATKIN_DEPENDS geometry_msgs.msg rospy std_msgs turtlesim.msg
 #  DEPENDS system_lib
 )
 
