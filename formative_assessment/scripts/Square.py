@@ -21,7 +21,7 @@ def posecallback(pose_message):
     y_value=pose_message.y
     deg=pose_message.theta
 
-
+#main function initiate the subscriber and publisher 
 def main():
 
     rospy.init_node('turtlesim_control_gui', anonymous=True)
@@ -47,8 +47,12 @@ def move_in_x(value):
     global deg,x_value,y_value
 
     rate=rospy.Rate(10)
+
     while not rospy.is_shutdown():
+        
+        #calculating the distance between the points
         distance =abs(x_value-value)
+        
         if distance>0.1:
             twist.linear.x=2.0
             cmd_vel_pub.publish(twist)
@@ -66,8 +70,11 @@ def move_in_y(value):
     global deg,x_value,y_value
 
     rate=rospy.Rate(10)
+
     while not rospy.is_shutdown():
+
         distance =abs(y_value-value)
+        #calculating the distance between the points
         if distance>0.1:
             twist.linear.x=2.0
             cmd_vel_pub.publish(twist)
@@ -87,11 +94,15 @@ def rotate(value):
     rate=rospy.Rate(10)
     
     while not rospy.is_shutdown():
+
+        #calculating difference in the current and expected theta value
         theta_diff=value-deg
+        #normalization of theta formula - took from google
         theta_diff=(theta_diff+3.14)%(2*3.14)-3.14
 
         if abs(theta_diff)>0.01:
             twist.linear.x=0.0
+            #turning the turtle in z axis
             twist.angular.z=0.5432*theta_diff/abs(theta_diff)
             cmd_vel_pub.publish(twist)
                     
@@ -102,17 +113,53 @@ def rotate(value):
             break
         rate.sleep()
     print(deg)    
+
+"""
+I used this fucntion perviously, but the exact right angle not obtained in several try. the turning radian is in consistent in various try.
+def turtle1_rotate():
+    rospy.init_node('turtlesim',anonymous=True)
+    pub =rospy.Publisher('/turtle1/cmd_vel',Twist,queue_size=10)
+    sub=rospy.Subscriber('/turtle1/pose',Pose,posecallback)
+    rate=rospy.Rate(10)
     
+    #comment - assign Twist() to var move_val
+    move_val= Twist()
+    
+    global deg
+    
+    #move_val.linear.x=0
+    #move_val.angular.z=0.5
+
+    while not rospy.is_shutdown():
+        if deg != 1.565 and deg<1.5608:
+            move_val.linear.x=0
+            move_val.angular.z=0.5236
+            pub.publish(move_val)
+        
+            
+        if deg>1.56 :
+            break
+        rate.sleep()
+    print(deg)
+    move_val.angular.z=0
+    pub.publish(move_val)
+    rate.sleep()
+"""    
     
 def draw_square():
+  
     move_in_x(8)
     rotate(1.57)
+ 
     move_in_y(8)
     rotate(3.14)
+  
     move_in_x(5.54)
     rotate(-1.57)
+  
     move_in_y(5.54)
     rotate(0.0)
+    
 
 # Form implementation generated from reading ui file 'SquareUI.ui'
 #
@@ -136,11 +183,12 @@ class Ui_Dialog(object):
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         
+        """
         self.progressBar = QtWidgets.QProgressBar(Dialog)
         self.progressBar.setGeometry(QtCore.QRect(50, 320, 561, 23))
-        self.progressBar.setProperty("value", 24)
+        self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
-        
+        """
         self.textBrowser_3 = QtWidgets.QTextBrowser(Dialog)
         self.textBrowser_3.setGeometry(QtCore.QRect(45, 80, 561, 31))
         self.textBrowser_3.setObjectName("textBrowser_3")
@@ -155,6 +203,8 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.pushButton.clicked.connect(draw_square)
 
+        
+
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
@@ -165,6 +215,6 @@ class Ui_Dialog(object):
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Press the Button to start the Square Program</p></body></html>"))
         self.pushButton.setText(_translate("Dialog", "Draw a Square"))
 
-
+# calling the main function
 if __name__ == "__main__":
     main()
